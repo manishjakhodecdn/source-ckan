@@ -1,0 +1,64 @@
+{% ckan_extends %}
+
+{% block basic_fields_url %}
+{{ super() }}
+	{% set package_info =  h.get_action('package_show', {'id':pkg_name } )  %}
+
+  {% set is_upload = (data.url_type == 'upload') %}
+ 
+ {% if package_info['system_data'] == 'MYSQL' %}
+    <div style="display:none;">
+      {{ form.input('url', label=_('URL'), id='field-url', placeholder=_('Url'), value="http://localhost.localdomain/", error=errors.url, classes=['control-medium']) }}
+    </div>
+ {% elif  package_info['system_data'] == 'ORACLE'%}
+  <div style="display:none;">
+    {{ form.input('url', label=_('URL'), id='field-url', placeholder=_('Url'), value="http://localhost.localdomain/", error=errors.url, classes=['control-medium']) }}   
+  </div>
+ {% else %} 
+    {{ form.image_upload(data, errors, field_url='url', field_upload='upload', field_clear='clear_upload',
+     is_upload_enabled=h.uploads_enabled(), is_url= data.url and not is_upload, is_upload=is_upload,
+     upload_label=_('File'), url_label=_('URL')) }}
+ {% endif %} 
+  
+  {% set resource_name =  package_info['name'] + '-' + package_info['system_data'] %} 
+  <div style="display:none;">
+      {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. January 2011 Gold Prices'), value=resource_name, error=errors.name, classes=['control-full']) }}
+  </div>
+
+  <div id="oracle" {% if package_info['system_data'] != 'ORACLE' %} style = "display:none;" {% endif %} >
+    {{ form.input('oracle_database_sid', label=_('Oracle Database Sid'), id='field-oracle_database_sid', placeholder=_('oracle database sid'), value=data.oracle_database_sid, error=errors.oracle_database_sid, classes=['control-medium']) }}
+
+    {{ form.input('oracle_server_name', label=_('Oracle Server Name'), id='field-oracle_server_name', placeholder=_('oracle server name'), value=data.oracle_server_name, error=errors.oracle_server_name, classes=['control-medium']) }}
+
+    {{ form.input('oracle_port', label=_('Oracle Port'), id='field-oracle_port', placeholder=_('Oracle Port'), value=data.oracle_port, error=errors.oracle_port, classes=['control-medium']) }}
+  </div> 
+  
+  <div id="mysql" {% if package_info['system_data'] != 'MYSQL'%} style = "display:none;" {% endif %} >  
+    {{ form.input('mysql_hostname', label=_('Mysql Hostname'), id='field-mysql_hostname', placeholder=_('Mysql Hostname'), value=data.mysql_hostname, error=errors.mysql_hostname, classes=['control-medium']) }}
+
+    {{ form.input('mysql_port', label=_('Mysql Port'), id='field-mysql_port', placeholder=_('Mysql Port'), value=data.mysql_port, error=errors.mysql_port, classes=['control-medium']) }}
+  </div>
+
+  <div id="msaccess" {% if package_info['system_data'] != 'MSACCESS'%} style = "display:none;" {% endif %}>
+  {{ form.input('access_database', label=_('Access Database'), id='field-access_database', placeholder=_('Access Database'), value=data.access_database, error=errors.access_database, classes=['control-medium']) }}
+  </div>
+
+  <div id="path_to_shared" {% if package_info['system_data'] == 'CSV' %}  style = "display:visible;" 
+                           {% elif  package_info['system_data'] == 'XML'%} style = "display:visible;"  
+                           {% elif package_info['system_data'] == 'JSON' %} style = "display:visible;" 
+                           {% else %} style = "display:none;" 
+                           {% endif %} >
+	{{ form.input('path_to_shared_area', label=_('Path to Shared Area'), id='field-path_to_shared_area', placeholder=_('Path to shared area'), value=data.path_to_shared_area, error=errors.path_to_shared_area, classes=['control-medium']) }}
+	</div>
+
+   <div style="display:none;"> 
+  	{{ form.input('path_url', label=_('URL'), id='field-path_url', placeholder=_('URL'), value=data.path_url, error=errors.path_url, classes=['control-medium']) }}
+  </div>
+  
+  
+  <div style="display:none;">
+
+  {{ form.input('format', label=_('format'), id='field-format', placeholder=_('format'), value=package_info['system_data'], error=errors.format, classes=['control-medium']) }}
+  </div>
+{% endblock %}
+

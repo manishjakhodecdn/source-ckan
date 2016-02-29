@@ -1,0 +1,28 @@
+{%ckan_extends %}
+
+{% block package_basic_fields_custom %}
+<!--<div class="control-group">
+    <label class="control-label" for="field-domain_category">{{ _("System Data") }}</label>
+    <div class="controls">
+      <select id="field-domain_category" name="{{ h.domain_category_field_name() }}" data-module="autocomplete">
+        {% set domain_category_data = data.get(h.domain_category_field_name(), '') %}
+        {% for domain_category in h.domain_categories()  %}
+          <option value="{{ domain_category[0] }}" {% if domain_category[1] == domain_category_data %}selected="selected"{% endif %}>{{ domain_category[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>-->
+<div class="control-group">
+<label for="field-system_data" class="control-label">{{ _('Data System') }}</label>
+<div class="controls">
+    <select id="field-system_data" name="system_data" data-module="autocomplete">
+        <option value="CSV" {% if data.system_data == 'CSV' %} selected="selected" {% endif %}> CSV</option>
+        <option value="XML" {% if data.system_data == 'XML' %} selected="selected" {% endif %}>XML</option>
+        <option value="ORACLE" {% if data.system_data == 'ORACLE' %} selected="selected" {% endif %} >ORACLE</option>
+        <option value="MYSQL" {% if data.system_data == 'MYSQL' %} selected="selected" {% endif %} >MYSQL</option>
+        <option value="MSACCESS" {% if data.system_data == 'MSACCESS' %} selected="selected" {% endif %} >MSACCESS</option>
+        <option value="JSON" {% if data.system_data == 'JSON' %} selected="selected" {% endif %} >JSON</option>
+    </select>
+</div>
+</div>
+{% endblock %}
