@@ -1,0 +1,36 @@
+<footer class="site-footer">
+  <div class="container">
+    {% block footer_content %}
+      <div class="row">
+        <div class="span6">
+          <a class="logo" href="{{ h.url('home') }}"><img src="/img/odp-logo.png" srcset="/img/odp-logo@2x.png 2x" alt="{{ g.site_title }} Logo" height="31" width="80" title="{{ g.site_title }} Logo" /></a>
+        </div>
+        <div class="span3">
+          <ul>
+            {% block header_site_navigation_tabs %}
+              {{ h.build_nav_main(
+                ('search', _('Data Source')),
+                ('group_index', _('Domain')),
+                ('organizations_index', _('Phase')),
+                ('about', _('About'))
+              ) }}
+            {% endblock %}
+          </ul>
+        </div>
+        <div class="span3">
+          <ul>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/pages/terms">Terms</a></li>
+            <li><a href="/features">Feature Request</a></li>
+          </ul>
+        </div>
+      </div>
+    {% endblock %}
+  </div>
+
+  {% block footer_debug %}
+    {% if g.debug %}
+      {% include 'snippets/debug.html' %}
+    {% endif %}
+  {% endblock %}
+</footer>

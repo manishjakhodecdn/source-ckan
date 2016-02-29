@@ -1,26 +1,17 @@
 {% ckan_extends %}
 
 {% block extras %}
-  {% if pkg_dict.system_data %}
+  {% if pkg_dict.domain_category %}
     <tr>
       <th scope="row" class="dataset-label">{{ _("System Data") }}</th>
-      <td class="dataset-details">{{ pkg_dict.system_data }}</td>
+      <td class="dataset-details">{{ pkg_dict.domain_category }}</td>
     </tr>
   {% endif %}
-
- {% if pkg_dict.structured_data %}
-    <tr>
-      <th scope="row" class="dataset-label">{{ _("Structured Data") }}</th>
-      <td class="dataset-details">{{ pkg_dict.structured_data }}</td>
-    </tr>
- {% endif %}
 
 {% if pkg_dict.data_sources %}
     <tr>
       <th scope="row" class="dataset-label">{{ _("Data Source") }}</th>
       <td class="dataset-details">{{ pkg_dict.data_sources }}</td>
-
-
     </tr>
   {% endif %}
 
@@ -41,7 +32,6 @@
     <tr>
       <th scope="row" class="dataset-label">{{ _("Security Requirement") }}</th>
       <td class="dataset-details">{{ pkg_dict.requirement_security }}</td>
-
     </tr>
   {% endif %}
 
