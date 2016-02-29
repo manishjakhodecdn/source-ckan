@@ -1,0 +1,24 @@
+{% ckan_extends %}
+
+{% block access_link %}
+    <!--<li>
+      <a href="{{ h.url_for('feature_form') }}" title="{{ _('Feature') }}">
+        {% if c.userobj %}
+          <i class="icon-envelope"></i>
+        {% else %}
+           {{ _('Feature') }}
+        {% endif %}
+      </a>
+    </li>-->
+{% endblock %}
+
+{ % block header_account_notlogged % }
+    { { super() } }
+    { { self.access_link() } }
+{ % endblock % }
+
+
+{% block header_account_logged %}
+    {{ super() }}
+    {{ self.access_link() }}
+{% endblock %}
