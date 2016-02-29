@@ -4,13 +4,15 @@
 
 <li class="resource-item" data-id="{{ res.id }}">
   {% block resource_item_title %}
-  <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+  <!-- <a class="heading" href="{# { url } #}" title="{{ res.name or res.description }}">-->
+  <strong>
     {# { h.resource_display_name(res) | truncate(50) } #}
     {{ pkg.name | truncate(50) }} - {{ pkg.system_data }}
     	
 <span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}"> {{ pkg.system_data }} {# { res.format } #}</span>
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
-  </a>
+    </strong>
+  <!--</a>-->
   {% endblock %}
   {% block resource_item_description %}
     <p class="description">
@@ -35,8 +37,8 @@
             <i class="icon-bar-chart"></i>
             {{ _('Preview') }}
           {% else %}
-            <i class="icon-info-sign"></i>
-            {{ _('More information') }}
+            <!--<i class="icon-info-sign"></i>-->
+            {# { _('More information') } #}
           {% endif %}
         </a>
       </li>
@@ -67,3 +69,76 @@
   {% endif %}
   {% endblock %}
 </li>
+
+
+{% if res.oracle_database_sid or res.path_to_shared_area or res.oracle_server_name or res.oracle_port or res.mysql_hostname or res.mysql_port or res.access_database or res.url %}
+<section class="resource-info">
+  <h3>{{ _('Resource Info') }}</h3>
+  <table class="table table-striped table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th scope="col">{{ _('Field') }}</th>
+        <th scope="col">{{ _('Value') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+	<!-- Code is here-->
+	{% if res.oracle_database_sid %}
+          <tr>
+            <th scope="row" class="dataset-label">{{ _("SID") }}</th>
+            <td class="dataset-details">{{ _(res.oracle_database_sid) }}</td>
+          </tr>
+    {% endif %}
+    {% if res.path_to_shared_area %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("Path to Shared area") }}</th>
+		  <td class="dataset-details">{{ res.path_to_shared_area }}</td>
+		</tr>
+	{% endif %}
+	{% if res.oracle_server_name %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("Oracle Server Name") }}</th>
+		  <td class="dataset-details">{{ res.oracle_server_name }}</td>
+		</tr>
+	{% endif %}
+	{% if res.oracle_port %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("Oracle Port") }}</th>
+		  <td class="dataset-details">{{ res.oracle_port }}</td>
+		</tr>
+	{% endif %}
+	{% if res.mysql_hostname %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("MySql Host") }}</th>
+		  <td class="dataset-details">{{ res.mysql_hostname }}</td>
+		</tr>
+	{% endif %}
+        
+	{% if res.mysql_port %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("MySql Port") }}</th>
+		  <td class="dataset-details">{{ res.mysql_port }}</td>
+		</tr>
+	{% endif %}
+    
+    {% if res.access_database %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("Access Request") }}</th>
+		  <td class="dataset-details">{{ res.access_database }}</td>
+		</tr>
+	{% endif %}
+    
+    {% if res.url %}
+		<tr>
+		  <th scope="row" class="dataset-label">{{ _("Path Url") }}</th>
+		  <td class="dataset-details">{{ res.url }}</td>
+		</tr>
+	{% endif %}
+    <!--End-->  
+	</tbody>
+  </table>
+</section>
+<li class="btn-group" style="float:right"><a href="/access_request?suid={{ pkg.creator_user_id }}&setid={{ pkg.id }}&dataset={{ pkg.name }}" class="btn btn-primary dropdown-toggle">Access Request</a></li>
+<li style="clear:both"></li>
+{% endif %}
+

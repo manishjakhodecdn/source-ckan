@@ -14,6 +14,11 @@ Example:
 {% set type = group.type or 'group' %}
 {% set url = h.url_for(type ~ '_read', action='read', id=group.name) %}
 {% block item %}
+
+{% for extra in group.extras %}
+
+{% if extra.key == 'gsk_type' and extra.value == '-dm' %}
+
 <li class="media-item">
   {% block item_inner %}
   {% block image %}
@@ -44,6 +49,8 @@ Example:
   {% endif %}
   {% endblock %}
 </li>
+{% endif %}
+{% endfor %}
 {% endblock %}
 {% if position is divisibleby 3 %}
   <li class="clearfix js-hide"></li>

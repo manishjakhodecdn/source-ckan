@@ -64,8 +64,8 @@
   {% if show_organizations_selector and show_visibility_selector %}
     <div data-module="dataset-visibility">
   {% endif %}
-
   {% if show_organizations_selector %}
+  
     {% set existing_org = data.owner_org or data.group_id %}
     <div class="control-group" style="display:none;">
       <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
@@ -103,7 +103,6 @@
     </div>
   {% endif %}
 
-
   {% if data.id and h.check_access('package_delete', {'id': data.id}) and data.state != 'active' %}
     <div class="control-group">
       <label for="field-state" class="control-label">{{ _('State') }}</label>
@@ -117,3 +116,4 @@
   {% endif %}
 
 {% endblock %}
+

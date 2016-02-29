@@ -2046,6 +2046,10 @@ def license_options(existing_license_id=None):
          register[license_id].title if license_id in register else license_id)
         for license_id in license_ids]
 
+def gsk_rating(pkgId, rate):
+    print pkgId
+    print rate
+    return "perminder"
 
 # these are the functions that will end up in `h` template helpers
 __allowed_functions__ = [
@@ -2166,4 +2170,5 @@ __allowed_functions__ = [
     'check_config_permission',
     'view_resource_url',
     'license_options',
+    'gsk_rating',
 ]

@@ -178,6 +178,17 @@ class ApiController(base.BaseController):
                                          qualified=True,
                                          )
                        }
+                       
+        if logic_function == 'rating_create': 
+            print request.params
+            if request.params['package'] != '' and request.params['package'] != None :
+                rate_dict = self.create_rating(request.params['package'], request.params['rating'])
+                print "rating done"
+                print rate_dict
+                return rate_dict
+            #return "hello i am here "
+
+
         try:
             side_effect_free = getattr(function, 'side_effect_free', False)
             request_data = self._get_request_data(try_url_params=
@@ -333,6 +344,7 @@ class ApiController(base.BaseController):
     def create(self, ver=None, register=None, subregister=None,
                id=None, id2=None):
 
+        print "in API"
         action_map = {
             'group': 'group_create_rest',
             'dataset': 'package_create_rest',
@@ -688,6 +700,18 @@ class ApiController(base.BaseController):
             organization_list = get_action('organization_autocomplete')(context, data_dict)
         return organization_list
 
+    def domain_autocomplete(self):
+        q = request.params.get('q', '')
+        limit = request.params.get('limit', 20)
+        domain_list = []
+
+        if q:
+            context = {'user': c.user, 'model': model}
+            data_dict = {'q': q, 'limit': limit}
+            domain_list = get_action('domain_autocomplete')(context, data_dict)
+        return domain_list
+
+
     def is_slug_valid(self):
 
         def package_exists(val):
@@ -734,6 +758,7 @@ class ApiController(base.BaseController):
 
     def tag_autocomplete(self):
         q = request.str_params.get('incomplete', '')
+        v = 'gsk_vocab'
         q = unicode(urllib.unquote(q), 'utf-8')
         limit = request.params.get('limit', 10)
         tag_names = []
@@ -741,7 +766,7 @@ class ApiController(base.BaseController):
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
-            data_dict = {'q': q, 'limit': limit}
+            data_dict = {'q': q, 'vocabulary_id': v, 'limit': limit}
 
             tag_names = get_action('tag_autocomplete')(context, data_dict)
 
@@ -907,3 +932,22 @@ class ApiController(base.BaseController):
                 request_data[key] = make_unicode(val)
         cls.log.debug('Request data extracted: %r' % request_data)
         return request_data
+    
+    def create_rating(self, pkg_dict, data):
+        print "create rating"
+        print pkg_dict
+
+        context_rating = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        #context_rating = {'model': model,
+        #               'session': model.Session,
+         #              'ignore_auth': True
+         #           }
+        #print pkg_dict
+        print data
+        rateDict = { 'package' : pkg_dict, 'rating':data  }
+        rate_res = logic.get_action('rating_create')(context_rating, rateDict)
+        print rate_res
+        jsonStr = '{ "result": { "rating_average" : "'+ str(rate_res['rating average'])+'", "rating_count":"'+ str(rate_res['rating count'])+'" } }'
+
+        return jsonStr        

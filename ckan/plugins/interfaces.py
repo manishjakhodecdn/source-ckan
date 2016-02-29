@@ -10,6 +10,7 @@ __all__ = [
     'IAuthFunctions',
     'IDomainObjectModification', 'IGroupController',
     'IOrganizationController',
+    'IDomainController',
     'IPackageController', 'IPluginObserver',
     'IConfigurable', 'IConfigurer',
     'IActions', 'IResourceUrlChange', 'IDatasetForm',
@@ -483,6 +484,39 @@ class IOrganizationController(Interface):
         '''
         return pkg_dict
 
+class IDomainController(Interface):
+    """
+    Hook into the Domain controller. These will
+    usually be called just before committing or returning the
+    respective object, i.e. all validation, synchronization
+    and authorization setup are complete.
+    """
+
+    def read(self, entity):
+        pass
+
+    def create(self, entity):
+        pass
+
+    def edit(self, entity):
+        pass
+
+    def authz_add_role(self, object_role):
+        pass
+
+    def authz_remove_role(self, object_role):
+        pass
+
+    def delete(self, entity):
+        pass
+
+    def before_view(self, pkg_dict):
+        '''
+             Extensions will recieve this before the domain gets
+             displayed. The dictionary passed will be the one that gets
+             sent to the template.
+        '''
+        return pkg_dict
 
 class IPackageController(Interface):
     """
@@ -1431,6 +1465,35 @@ class IFacets(Interface):
 
         '''
         return facets_dict
+
+    def domain_facets(self, facets_dict, domain_type, package_type):
+        '''Modify and return the ``facets_dict`` for an domain's page.
+
+        The ``package_type`` is the type of package that these facets apply to.
+        Plugins can provide different search facets for different types of
+        package. See :py:class:`~ckan.plugins.interfaces.IDatasetForm`.
+
+        The ``domain_type`` is the type of domain that these facets
+        apply to.  Plugins can provide different search facets for different
+        types of domain. See
+        :py:class:`~ckan.plugins.interfaces.IGroupForm`.
+
+        :param facets_dict: the search facets as currently specified
+        :type facets_dict: OrderedDict
+
+        :param domain_type: the domain type that these facets apply
+                                  to
+        :type domain_type: string
+
+        :param package_type: the package type that these facets apply to
+        :type package_type: string
+
+        :returns: the updated ``facets_dict``
+        :rtype: OrderedDict
+
+        '''
+        return facets_dict
+
 
 
 class IAuthenticator(Interface):

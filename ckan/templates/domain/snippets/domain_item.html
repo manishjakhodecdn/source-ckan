@@ -1,0 +1,46 @@
+{#
+Renders a media item for a domain. This should be used in a list.
+
+domain - A domain dict.
+
+Example:
+
+    <ul class="media-grid">
+      {% for domain in domains %}
+        {% snippet "domain/snippets/domain_item.html", domain=domain %}
+      {% endfor %}
+    </ul>
+#}
+{% set url = h.url_for(domain.type ~ '_read', action='read', id=domain.name) %}
+{% block item %}
+<li class="media-item">
+  {% block item_inner %}
+  {% block image %}
+    <img src="{{ domain.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ domain.name }}" class="media-image">
+  {% endblock %}
+  {% block title %}
+    <h3 class="media-heading">{{ domain.display_name }}</h3>
+  {% endblock %}
+  {% block description %}
+    {% if domain.description %}
+      <p>{{ h.markdown_extract(domain.description, extract_length=80) }}</p>
+    {% endif %}
+  {% endblock %}
+  {% block datasets %}
+    {% if domain.package_count %}
+      <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', domain.package_count).format(num=domain.package_count) }}</strong>
+    {% else %}
+      <span class="count">{{ _('0 Datasets') }}</span>
+    {% endif %}
+  {% endblock %}
+  {% block link %}
+  <a href="{{ url }}" title="{{ _('View {domain_name}').format(domain_name=domain.display_name) }}" class="media-view">
+    <span>{{ _('View {domain_name}').format(domain_name=domain.display_name) }}</span>
+  </a>
+  {% endblock %}
+  {% endblock %}
+</li>
+{% endblock %}
+{% if position is divisibleby 3 %}
+  <li class="clearfix js-hide"></li>
+{% endif %}

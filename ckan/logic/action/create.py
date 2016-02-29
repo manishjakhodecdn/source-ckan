@@ -940,11 +940,12 @@ def rating_create(context, data_dict):
     :rtype: dictionary
 
     '''
+    print "rating_create API Start"
     model = context['model']
     user = context.get("user")
 
     package_ref = data_dict.get('package')
-    rating = data_dict.get('rating')
+    rating = int(data_dict.get('rating'))
     opts_err = None
     if not package_ref:
         opts_err = _('You must supply a package id or name '
@@ -973,6 +974,7 @@ def rating_create(context, data_dict):
     package = model.Package.get(package_ref)
     ret_dict = {'rating average': package.get_average_rating(),
                 'rating count': len(package.ratings)}
+     
     return ret_dict
 
 

@@ -159,7 +159,7 @@ class UserController(base.BaseController):
                    'auth_user_obj': c.userobj,
                    'schema': self._new_form_to_db_schema(),
                    'save': 'save' in request.params}
-
+		
         try:
             check_access('user_create', context)
         except NotAuthorized:
@@ -228,6 +228,8 @@ class UserController(base.BaseController):
             context['message'] = data_dict.get('log_message', '')
             captcha.check_recaptcha(request)
             user = get_action('user_create')(context, data_dict)
+            #c.is_sysadmin = authz.is_sysadmin(c.user)
+            
         except NotAuthorized:
             abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
@@ -242,13 +244,29 @@ class UserController(base.BaseController):
             errors = e.error_dict
             error_summary = e.error_summary
             return self.new(data_dict, errors, error_summary)
+
         if not c.user:
             # log the user in programatically
             rememberer = request.environ['repoze.who.plugins']['friendlyform']
             identity = {'repoze.who.userid': data_dict['name']}
             response.headerlist += rememberer.remember(request.environ,
                                                        identity)
-            h.redirect_to(controller='user', action='me', __ckan_no_root=True)
+            context1 = {'model': model,
+                   'session': model.Session,
+                   'user': c.user,
+                   "ignore_auth": True
+                   }                                                       
+            ## Major Change for creating user as a member within organization.
+            ## Manish Jakhode
+            
+            organization_list_item = { 'order_by ' : 'name' }
+            organization_list_item = logic.get_action('organization_list')(context1, organization_list_item)
+            
+            for list_item in organization_list_item: 
+                organization_string = { 'id' : list_item, 'username' : data_dict['name'], 'role': 'editor' }
+                userrole = logic.get_action('organization_member_create')(context1, organization_string)
+
+            h.redirect_to(controller='user', action='me', __ckan_no_root=True, )
         else:
             # #1799 User has managed to register whilst logged in - warn user
             # they are not re-logged in as new user.

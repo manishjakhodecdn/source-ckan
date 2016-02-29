@@ -5,8 +5,11 @@
       {% block tag_list %}
         <ul class="{{ _class }}">
           {% for list in list1 %}
+            {% set domain_lower = list.replace(' ', '-') %}
+            {% set domain_lower = domain_lower.lower() %}
+            {# {  domain_lower  } #}
             <li>
-            <a class="tag" href="{% url_for controller='package', action='search', domain=list %}">{{ h.truncate(list, 22) }}</a>
+            <a class="tag" href="{% url_for controller='package', action='search', groups=domain_lower+'-dm' %}">{{ h.truncate(domain_lower, 22) }}</a>
             </li>
           {% endfor %}
         </ul>
@@ -14,14 +17,19 @@
 {% endif %}
 
 {% if pkg_dict.phase %}
+  
      <h3>{{ _("Phase") }}</h3>
      {% set list_phase = pkg_dict.phase.split(',') %}
+
      {% set _class = _class or 'tag-list well' %}
       {% block phase_list %} 
        <ul class="{{ _class }}">
        {% for phase_name in list_phase %}
+        {% set phase_lower = phase_name.replace(' ', '-') %}
+        {% set phase_lower = phase_lower.lower() %}
+        {# {  phase_lower  } #}
          <li>
-            <a class="tag" href="{% url_for controller='package', action='search', phase=phase_name %}">{{ h.truncate(phase_name, 22) }}</a>
+            <a class="tag" href="{% url_for controller='package', action='search', organization=phase_lower+'-ph' %}">{{ h.truncate(phase_lower, 22) }}</a>
             </li>
        {% endfor %}
        </ul>
@@ -36,7 +44,7 @@
        <ul class="{{ _class }}">
        {% for key_name in list3 %}
          <li>
-            <a class="tag" href="{% url_for controller='package', action='search', key_entities=key_name %}">{{ h.truncate(key_name, 22) }}</a>
+            <a class="tag" href="{% url_for controller='package', action='search', key_entities='' %}">{{ h.truncate(key_name, 22) }}</a>
             </li>
        {% endfor %}
        </ul>
@@ -50,8 +58,9 @@
       {% block front_list %} 
        <ul class="{{ _class }}">
        {% for list_name in list2 %}
+       
         <li>
-          <a class="tag" href="{% url_for controller='package', action='search', frontend_app=list_name %}">{{ h.truncate(list_name, 22) }}</a>
+          <a class="tag" href="{% url_for controller='package', action='search', frontend_app='' %}">{{ h.truncate(list_name, 22) }}</a>
         </li>
        {% endfor %}
        </ul>
@@ -88,8 +97,6 @@
             <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
           </tr>
         {% endif %}
-        
-
       {% block extras scoped %}
         {% for extra in h.sorted_extras(pkg_dict.extras) %}
           {% set key, value = extra %}
@@ -105,13 +112,49 @@
   </table>
 </section>
 
+{#  Rating section custom code   #}
+{% set rating_lst = h.manage_rating(pkg_dict) %}
+{% set items = [1,2,3,4,5] %}
+<section class="module-ratings module-narrow module-shallow">
+       <span><strong> Average Customer Review </strong></span>
+</section>
+<section class="module-ratings module-narrow module-shallow">
+<span id="star-rating-wrap">
+           {% for item in items %}
+              {% if item <= rating_lst.rating_average %}
+                  <img width="16" height="16" src="/images/star.png" class="star" {% if c.userobj %} onclick="do_rating('{{pkg_dict.id}}', '{{item}}')" {% endif %}>
+              {% else %}
+                  <img width="16" height="16" src="/images/star_greyscale.png" class="star" {% if c.userobj %} onclick="do_rating('{{pkg_dict.id}}', '{{item}}')" {% endif %}>
+              {% endif %}
+            {% endfor %}
+</span>
+<span style="color:blue;">( {{ rating_lst.rating_count }}  customer reviews )</span>
+          <p>
+            {% if not c.userobj %} 
+            {{ _('Login to rate.') }} 
+            {% endif %}
+          </p>
+</section>
 <script type="text/javascript">
-    var disqus_shortname = 'idatamap';
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+function do_rating(pkgid, item ){
+  var data = [];
+  data['package'] = pkgid;
+  data['rating'] = item;
+  pdata="package="+pkgid+'&rating='+item;
+  $.ajax({
+		url:"/api/3/action/rating_create",
+		data:pdata,
+		type:"GET",
+		success:function(data){
+			//console.log(data.result[0])
+			window.location.reload();
+		}
+	});
+/*$.get( "/api/3/action/rating_create?package="+pkgid+"&rating="+item, function( data ) {
+  $( ".result" ).html( data );
+    //alert('Thanks for your rating submission.');
+    window.location.reload();
+});*/
+ 
+}
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-<div> {{h.disqus_recent()}} </div>
