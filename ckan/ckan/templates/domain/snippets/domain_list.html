@@ -1,0 +1,19 @@
+{#
+Display a grid of domain items.
+
+domains - A list of domains.
+
+Example:
+
+    {% snippet "domain/snippets/domain_list.html" %}
+
+#}
+{% block domain_list %}
+<ul class="media-grid" data-module="media-grid">
+  {% block domain_list_inner %}
+  {% for domain in domains %}
+    {# % snippet "domain/snippets/domain_item.html", domain=domain, position=loop.index % #}
+  {% endfor %}
+   {% endblock %}
+</ul>
+{% endblock %}

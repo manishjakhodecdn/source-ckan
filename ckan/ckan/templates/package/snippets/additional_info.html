@@ -1,0 +1,160 @@
+{% if pkg_dict.domain %}
+     <h3> {{ _("Domain") }}</h3>
+     {% set list1 = pkg_dict.domain.split(',') %}
+     {% set _class = _class or 'tag-list well' %}
+      {% block tag_list %}
+        <ul class="{{ _class }}">
+          {% for list in list1 %}
+            {% set domain_lower = list.replace(' ', '-') %}
+            {% set domain_lower = domain_lower.lower() %}
+            {# {  domain_lower  } #}
+            <li>
+            <a class="tag" href="{% url_for controller='package', action='search', groups=domain_lower+'-dm' %}">{{ h.truncate(domain_lower, 22) }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endblock %}
+{% endif %}
+
+{% if pkg_dict.phase %}
+  
+     <h3>{{ _("Phase") }}</h3>
+     {% set list_phase = pkg_dict.phase.split(',') %}
+
+     {% set _class = _class or 'tag-list well' %}
+      {% block phase_list %} 
+       <ul class="{{ _class }}">
+       {% for phase_name in list_phase %}
+        {% set phase_lower = phase_name.replace(' ', '-') %}
+        {% set phase_lower = phase_lower.lower() %}
+        {# {  phase_lower  } #}
+         <li>
+            <a class="tag" href="{% url_for controller='package', action='search', organization=phase_lower+'-ph' %}">{{ h.truncate(phase_lower, 22) }}</a>
+            </li>
+       {% endfor %}
+       </ul>
+      {% endblock %}     
+{% endif %}
+
+{% if pkg_dict.key_entities %}
+     <h3>{{ _("Key Entities") }}</h3>
+     {% set list3 = pkg_dict.key_entities.split(',') %}
+     {% set _class = _class or 'tag-list well' %}
+      {% block key_list %} 
+       <ul class="{{ _class }}">
+       {% for key_name in list3 %}
+         <li>
+            <a class="tag" href="{% url_for controller='package', action='search', key_entities='' %}">{{ h.truncate(key_name, 22) }}</a>
+            </li>
+       {% endfor %}
+       </ul>
+      {% endblock %}     
+{% endif %}
+
+{% if pkg_dict.frontend_app %}
+     <h3>{{ _("Frontend Apps") }}</h3>
+     {% set list2 = pkg_dict.frontend_app.split(',') %}
+     {% set _class = _class or 'tag-list well' %}
+      {% block front_list %} 
+       <ul class="{{ _class }}">
+       {% for list_name in list2 %}
+       
+        <li>
+          <a class="tag" href="{% url_for controller='package', action='search', frontend_app='' %}">{{ h.truncate(list_name, 22) }}</a>
+        </li>
+       {% endfor %}
+       </ul>
+      {% endblock %}     
+{% endif %}
+
+
+
+<section class="additional-info">
+  <h3>{{ _('Additional Info') }}</h3>
+  <table class="table table-striped table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th scope="col">{{ _('Field') }}</th>
+        <th scope="col">{{ _('Value') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% block package_additional_info %}
+        {% if pkg_dict.url %}
+          <tr>
+            <th scope="row" class="dataset-label">{{ _('Source') }}</th>
+            {% if h.is_url(pkg_dict.url) %}
+              <td class="dataset-details" property="foaf:homepage">{{ h.link_to(pkg_dict.url, pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
+            {% else %}
+              <td class="dataset-details" property="foaf:homepage">{{ pkg_dict.url }}</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+
+        {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
+          <tr>
+            <th scope="row" class="dataset-label">{{ _("State") }}</th>
+            <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
+          </tr>
+        {% endif %}
+      {% block extras scoped %}
+        {% for extra in h.sorted_extras(pkg_dict.extras) %}
+          {% set key, value = extra %}
+          <tr rel="dc:relation" resource="_:extra{{ i }}">
+            <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+            <td class="dataset-details" property="rdf:value">{{ value }}</td>
+          </tr>
+        {% endfor %}
+      {% endblock %}
+
+      {% endblock %}
+    </tbody>
+  </table>
+</section>
+
+{#  Rating section custom code   #}
+{% set rating_lst = h.manage_rating(pkg_dict) %}
+{% set items = [1,2,3,4,5] %}
+<section class="module-ratings module-narrow module-shallow">
+       <span><strong> Average Customer Review </strong></span>
+</section>
+<section class="module-ratings module-narrow module-shallow">
+<span id="star-rating-wrap">
+           {% for item in items %}
+              {% if item <= rating_lst.rating_average %}
+                  <img width="16" height="16" src="/images/star.png" class="star" {% if c.userobj %} onclick="do_rating('{{pkg_dict.id}}', '{{item}}')" {% endif %}>
+              {% else %}
+                  <img width="16" height="16" src="/images/star_greyscale.png" class="star" {% if c.userobj %} onclick="do_rating('{{pkg_dict.id}}', '{{item}}')" {% endif %}>
+              {% endif %}
+            {% endfor %}
+</span>
+<span style="color:blue;">( {{ rating_lst.rating_count }}  customer reviews )</span>
+          <p>
+            {% if not c.userobj %} 
+            {{ _('Login to rate.') }} 
+            {% endif %}
+          </p>
+</section>
+<script type="text/javascript">
+function do_rating(pkgid, item ){
+  var data = [];
+  data['package'] = pkgid;
+  data['rating'] = item;
+  pdata="package="+pkgid+'&rating='+item;
+  $.ajax({
+		url:"/api/3/action/rating_create",
+		data:pdata,
+		type:"GET",
+		success:function(data){
+			//console.log(data.result[0])
+			window.location.reload();
+		}
+	});
+/*$.get( "/api/3/action/rating_create?package="+pkgid+"&rating="+item, function( data ) {
+  $( ".result" ).html( data );
+    //alert('Thanks for your rating submission.');
+    window.location.reload();
+});*/
+ 
+}
+</script>

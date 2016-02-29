@@ -1,0 +1,62 @@
+{% ckan_extends %}
+
+{% block extras %}
+  {% if pkg_dict.domain_category %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("System Data") }}</th>
+      <td class="dataset-details">{{ pkg_dict.domain_category }}</td>
+    </tr>
+  {% endif %}
+
+{% if pkg_dict.data_sources %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("Data Source") }}</th>
+      <td class="dataset-details">{{ pkg_dict.data_sources }}</td>
+    </tr>
+  {% endif %}
+
+{% if pkg_dict.system_experts %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("Data Source Expert") }}</th>
+      <!--<td class="dataset-details">{{ pkg_dict.system_experts }}</td>-->
+	{% set system_expert_group = pkg_dict.system_experts.split(',') %}
+      <td class="dataset-details" property="dc:creator">
+	{% for list_name in system_expert_group %}
+		<a class="tag" href="mailto:{{ list_name }}">{{ h.truncate(list_name, 22) }}</a>
+	{% endfor %}	
+      </td>
+    </tr>
+  {% endif %}
+
+{% if pkg_dict.requirement_security %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("Security Requirement") }}</th>
+      <td class="dataset-details">{{ pkg_dict.requirement_security }}</td>
+    </tr>
+  {% endif %}
+
+
+{% if pkg_dict.it_system_owner %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("IT System Owner") }}</th>
+	{% set system_owner_group = pkg_dict.it_system_owner.split(',') %}
+        <td class="dataset-details" property="dc:creator">
+		{% for system_owner_it in system_owner_group %}
+		<a class="tag" href="mailto:{{ system_owner_it }}">{{ h.truncate(system_owner_it, 22) }}</a>
+	{% endfor %}	
+	</td>
+    </tr>
+  {% endif %}
+
+{% if pkg_dict.business_owner %}
+    <tr>
+      <th scope="row" class="dataset-label">{{ _("Business Owner") }}</th>
+	{% set business_owner_group = pkg_dict.business_owner.split(',') %}
+        <td class="dataset-details" property="dc:creator">
+		{% for business_owner_mail in business_owner_group %}
+		<a class="tag" href="mailto:{{ business_owner_mail }}">{{ h.truncate(business_owner_mail, 22) }}</a>
+	{% endfor %}	
+	</td>
+    </tr>
+  {% endif %}
+{% endblock %}
