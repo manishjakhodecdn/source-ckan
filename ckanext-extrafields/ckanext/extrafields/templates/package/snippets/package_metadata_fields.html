@@ -1,0 +1,88 @@
+{% ckan_extends %}
+
+{# You could remove 'free extras' from the package form like this, but we keep them for this example's tests.
+  {% block custom_fields %}
+  {% endblock %}
+#}
+{% block package_metadata_fields %}
+
+	{% block package_metadata_fields_structured_data %}
+	<div class="control-group">
+	<label for="field-structured_data" class="control-label">{{ _('Data Structure') }}</label>
+	<div class="controls">
+	    <select id="field-structured_data" name="structured_data" data-module="autocomplete">
+	        <option value="structured" selected="selected"> Structured</option>
+	        <option value="unstructured" >Unstructured</option>
+	    </select>
+ 	</div>
+	</div>
+  {% endblock %}
+
+	{% block package_metadata_fields_data_sources %}
+			<div class="control-group">
+			<label for="field-data_sources" class="control-label">{{ _('Data Source') }}</label>
+			<div class="controls">
+			    <select id="field-data_sources" name="data_sources" data-module="autocomplete">
+			        <option value="internal" selected="selected">Internal</option>
+			        <option value="external">External</option>
+			    </select>
+			</div>
+			</div>
+	{% endblock %}
+	
+	{% block package_metadata_fields_requirement_security %}
+			<div class="control-group">
+			<label for="field-requirement_security" class="control-label">{{ _('Security Requirement') }}</label>
+			<div class="controls">
+			    <select id="field-requirement_security" name="requirement_security" data-module="autocomplete">
+			        <option value="grade1" selected="selected">Grade 1</option>
+			        <option value="grade2">Grade 2</option>
+			        <option value="grade3">Grade 3</option>
+			    </select>
+			</div>
+			</div>
+	{% endblock %}
+
+	{% block package_metadata_fields_system_experts %}
+		{% set system_experts_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('system_experts', id='field-system_experts', label=_('Data Source Experts'), placeholder=_('eg. data sources experts'), value=data.system_experts, error=errors.system_experts, classes=['control-full'], attrs=system_experts_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_it_system_owner %}
+		{% set it_system_owner_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('it_system_owner', id='field-it_system_owner', label=_('IT System Owner'), placeholder=_('eg. IT System Owner'), value=data.it_system_owner, error=errors.it_system_owner, classes=['control-full'], attrs=it_system_owner_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_business_owner %}
+		{% set business_owner_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('business_owner', id='field-business_owner', label=_('Business Owner'), placeholder=_('eg. Business Owner'), value=data.business_owner, error=errors.business_owner, classes=['control-full'], attrs=business_owner_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_frontend_app %}
+		{% set frontend_app_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('frontend_app', id='field-frontend_app', label=_('Frontend App'), placeholder=_('eg. Frontend app'), value=data.frontend_app, error=errors.frontend_app, classes=['control-full'], attrs=frontend_app_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_domain %}
+		{% set domain_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('domain', id='field-domain', label=_('Domain'), placeholder=_('eg.domain'), value=data.domain, error=errors.domain, classes=['control-full'], attrs=domain_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_key_entities %}
+		{% set key_entities_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+		{{ form.input('key_entities', id='field-key_entities', label=_('Key Entities'), placeholder=_('eg. key_entities'), value=data.key_entities, error=errors.key_entities, classes=['control-full'], attrs=key_entities_attrs) }}
+  {% endblock %}
+
+{% block package_metadata_fields_phase %}
+		{{ form.input('phase', id='field-phase', label=_('Phase'), placeholder=_('eg. Phase'), value=data.phase, error=errors.phase, classes=['control-full']) }}
+  {% endblock %}
+
+{% block package_metadata_fields_chameleon_id %}
+		{{ form.input('chameleon_id', id='field-chameleon_id', label=_('Chameleon Id'), placeholder=_('eg. Chameleon Id'), value=data.chameleon_id, error=errors.chameleon_id, classes=['control-full']) }}
+  {% endblock %}
+
+{{ super() }}
+{% endblock %}
+
+
+
