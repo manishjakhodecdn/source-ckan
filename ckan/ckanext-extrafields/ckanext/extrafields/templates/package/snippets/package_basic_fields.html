@@ -1,0 +1,18 @@
+{%ckan_extends %}
+
+{% block package_basic_fields_custom %}
+
+{% block package_basic_fields_custom_system_data %}
+<div class="control-group">
+<label for="field-system_data" class="control-label">{{ _('Data System') }}</label>
+<div class="controls">
+    <select id="field-system_data" name="system_data" data-module="autocomplete">
+        <option value="csv" selected="selected"> CSV</option>
+        <option value="xml" >XML</option>
+        <option value="oracle" >ORACLE</option>
+        <option value="json" >JSON</option>
+    </select>
+</div>
+</div>
+{% endblock %}
+{% endblock %}

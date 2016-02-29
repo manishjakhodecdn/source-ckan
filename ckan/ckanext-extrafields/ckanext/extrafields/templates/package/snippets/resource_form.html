@@ -1,0 +1,24 @@
+{% ckan_extends %}
+
+{% block basic_fields_url %}
+{{ super() }}
+
+  {{ form.input('oracle_database_sid', label=_('Oracle Database Sid'), id='field-oracle_database_sid', placeholder=_('oracle database sid'), value=data.oracle_database_sid, error=errors.oracle_database_sid, classes=['control-medium']) }}
+
+  {{ form.input('oracle_server_name', label=_('Oracle Server Name'), id='field-oracle_server_name', placeholder=_('oracle server name'), value=data.oracle_server_name, error=errors.oracle_server_name, classes=['control-medium']) }}
+
+  {{ form.input('oracle_port', label=_('Oracle Port'), id='field-oracle_port', placeholder=_('Oracle Port'), value=data.oracle_port, error=errors.oracle_port, classes=['control-medium']) }}
+
+  {{ form.input('mysql_hostname', label=_('Mysql Hostname'), id='field-mysql_hostname', placeholder=_('Mysql Hostname'), value=data.mysql_hostname, error=errors.mysql_hostname, classes=['control-medium']) }}
+
+  {{ form.input('mysql_port', label=_('Mysql Port'), id='field-mysql_port', placeholder=_('Mysql Port'), value=data.mysql_port, error=errors.mysql_port, classes=['control-medium']) }}
+
+  {{ form.input('access_database', label=_('Access Database'), id='field-access_database', placeholder=_('Access Database'), value=data.access_database, error=errors.access_database, classes=['control-medium']) }}
+
+	{{ form.input('path_to_shared_area', label=_('Path to Shared Area'), id='field-path_to_shared_area', placeholder=_('Path to shared area'), value=data.path_to_shared_area, error=errors.path_to_shared_area, classes=['control-medium']) }}
+	
+	{{ form.input('path_url', label=_('URL'), id='field-path_url', placeholder=_('URL'), value=data.path_url, error=errors.path_url, classes=['control-medium']) }}
+
+
+{% endblock %}
+
